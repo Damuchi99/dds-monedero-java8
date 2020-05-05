@@ -47,7 +47,10 @@ public class Movimiento {
     cuenta.setSaldo(calcularValor(cuenta));
     cuenta.agregarMovimiento(fecha, monto, esDeposito);
   }
-
+  
+  //Falta polimorfismo
+  //Se podrian declarar una clase abstracta TipoMovimiento y que hereden las clases Deposito y Extracción
+  //así se reemplaza este if por un "this.tipo.calcularNuevoSaldo()"
   public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
       return cuenta.getSaldo() + getMonto();
