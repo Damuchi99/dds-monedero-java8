@@ -39,7 +39,6 @@ public class Cuenta {
     new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
   }
   
-  //Long Method
   public void sacar(double cuanto) {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
@@ -48,25 +47,14 @@ public class Cuenta {
       throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
     }
     double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    double limite = 1000 - montoExtraidoHoy; //limite -= cuanto, igual para cada dia podria hacerse un metodo 
-    										 //resetearLimite(), agregando una fechaDeHoy y el limite diario
-    										 //como atributo y le pasa un movimiento como parametro para comparar
-    										 //fechas
+    double limite = 1000 - montoExtraidoHoy; 
+    
     if (cuanto > limite) {
       throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
           + " diarios, l√≠mite: " + limite);
     }
     new Movimiento(LocalDate.now(), cuanto, false).agregateA(this);
   }
-  
-  /*
-   * void resetearLimite(unMovimiento){
-   * 	if(this.fechaDeHoy != unMovimiento.getFecha()){
-   * 		this.setFechaDeHoy(<laFechaDeHoy>);
-   * 		this.setLimite(1000);
-   * 	}
-   * }
-   */
   
   //Long Parameter List: Podemos pasarle un Movimiento como parametro en vez de los datos del Movimiento
   public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
@@ -77,8 +65,8 @@ public class Cuenta {
   //Message Chains
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
-    		//si se hace esta comparacion en el filter, entonces el metodo fueExtraido() estaria al pedo
-    		//øpor quÈ no usar dicho metodo?
+    		//en vez de preguntar si un movimiento no es depÛsito, mejor preguntar si es una extracciÛn
+    		//tambien se puede usar el metodo esDeFecha() en vez de la segunda comparaciÛn
         .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
         .mapToDouble(Movimiento::getMonto)
         .sum();
