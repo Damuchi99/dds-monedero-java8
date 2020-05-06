@@ -60,9 +60,7 @@ public class Cuenta {
     new Extraccion(LocalDate.now(), cuanto).agregateA(this);
   }
   
-  //Long Parameter List: Podemos pasarle un Movimiento como parametro en vez de los datos del Movimiento
-  public void agregarMovimiento(LocalDate fecha, double cuanto, boolean esDeposito) {
-    Movimiento movimiento = new Movimiento(fecha, cuanto, esDeposito);
+  public void agregarMovimiento(Movimiento movimiento) {
     movimientos.add(movimiento);
   }
   
