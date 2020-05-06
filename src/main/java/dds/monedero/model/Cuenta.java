@@ -37,7 +37,7 @@ public class Cuenta {
   
   public Stream<Movimiento> getDepositosDeFecha(LocalDate fecha){
 	  return getMovimientos().stream()
-		.filter(movimiento -> movimiento.isDeposito() && movimiento.getFecha().equals(fecha));
+		.filter(movimiento -> movimiento.fueDepositado(fecha));
   }
   
   public void validarMaximoDepositos() {
@@ -88,7 +88,7 @@ public class Cuenta {
   
   public Stream<Movimiento> getExtraccionesDeFecha(LocalDate fecha){
 	  return getMovimientos().stream()
-		.filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha));
+		.filter(movimiento -> movimiento.fueExtraido(fecha));
   }
 
   public List<Movimiento> getMovimientos() {
