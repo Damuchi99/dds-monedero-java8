@@ -30,9 +30,7 @@ public class Cuenta {
   public void poner(double cuanto) {
 	validarMontoNegativo(cuanto);
     
-    if (getDepositosDeFecha(LocalDate.now()).count() >= 3) {
-      throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
-    }
+	validarMaximoDepositos();
 
     new Deposito(LocalDate.now(), cuanto).agregateA(this);
   }
@@ -40,6 +38,12 @@ public class Cuenta {
   public Stream<Movimiento> getDepositosDeFecha(LocalDate fecha){
 	  return getMovimientos().stream()
 		.filter(movimiento -> movimiento.isDeposito() && movimiento.getFecha().equals(fecha));
+  }
+  
+  public void validarMaximoDepositos() {
+	  if (getDepositosDeFecha(LocalDate.now()).count() >= 3) {
+	      throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
+	  }
   }
   
   public void sacar(double cuanto) {
