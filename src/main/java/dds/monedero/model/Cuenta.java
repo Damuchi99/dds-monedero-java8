@@ -31,7 +31,10 @@ public class Cuenta {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
     }
     
-    //Se podria hacer un metodo cantidadDeDepositos() en vez de la comparacion en el if
+    //si se hace esta comparacion en el filter, entonces el metodo fueDepositado(fecha) estaria al pedo
+  	//¿por qué no usar dicho metodo?
+    //Aparte que en este if no se pregunta si el depósito fue de la fecha de hoy
+    //Toda esta comparacion del if la podriamos meter en un metodo
     if (getMovimientos().stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
       throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
     }
@@ -39,6 +42,7 @@ public class Cuenta {
     new Movimiento(LocalDate.now(), cuanto, true).agregateA(this);
   }
   
+  //Long Method: hora de dividir estas comparaciones en varios metodos
   public void sacar(double cuanto) {
     if (cuanto <= 0) {
       throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
@@ -62,11 +66,11 @@ public class Cuenta {
     movimientos.add(movimiento);
   }
   
-  //Message Chains
   public double getMontoExtraidoA(LocalDate fecha) {
     return getMovimientos().stream()
-    		//en vez de preguntar si un movimiento no es depósito, mejor preguntar si es una extracción
-    		//tambien se puede usar el metodo esDeFecha() en vez de la segunda comparación
+    		//si se hace esta comparacion en el filter, entonces el metodo fueExtraido(fecha) estaria al pedo
+    		//¿por qué no usar dicho metodo?
+    		//Toda esta comparacion del filter la podriamos meter en un metodo
         .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
         .mapToDouble(Movimiento::getMonto)
         .sum();
