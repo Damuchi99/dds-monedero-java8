@@ -3,7 +3,6 @@ package dds.monedero.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import dds.monedero.exceptions.MaximaCantidadDepositosException;
@@ -44,22 +43,34 @@ public class Cuenta {
     new Deposito(LocalDate.now(), cuanto).agregateA(this);
   }
   
-  //Long Method: hora de dividir estas comparaciones en varios metodos
   public void sacar(double cuanto) {
-    if (cuanto <= 0) {
-      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
-    }
-    if (getSaldo() - cuanto < 0) {
-      throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
-    }
-    double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
-    double limite = 1000 - montoExtraidoHoy; 
-    
-    if (cuanto > limite) {
-      throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
-          + " diarios, límite: " + limite);
-    }
-    new Extraccion(LocalDate.now(), cuanto).agregateA(this);
+	  validarMontoNegativo(cuanto);
+	  validarSaldoMenor(cuanto);
+	  validarMaximaExtraccionDiaria(cuanto);
+	  
+	  new Extraccion(LocalDate.now(), cuanto).agregateA(this);
+  }
+  
+  public void validarMontoNegativo(double cuanto) {
+	  if (cuanto <= 0) {
+	      throw new MontoNegativoException(cuanto + ": el monto a ingresar debe ser un valor positivo");
+	  }
+  }
+  
+  public void validarSaldoMenor(double cuanto) {
+	  if (getSaldo() - cuanto < 0) {
+	      throw new SaldoMenorException("No puede sacar mas de " + getSaldo() + " $");
+	  }
+  }
+  
+  public void validarMaximaExtraccionDiaria(double cuanto) {
+	  double montoExtraidoHoy = getMontoExtraidoA(LocalDate.now());
+	  double limite = 1000 - montoExtraidoHoy; 
+	    
+	  if (cuanto > limite) {
+	      throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
+	          + " diarios, límite: " + limite);
+	  }
   }
   
   public void agregarMovimiento(Movimiento movimiento) {
