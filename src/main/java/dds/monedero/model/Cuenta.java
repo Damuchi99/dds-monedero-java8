@@ -3,6 +3,8 @@ package dds.monedero.model;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import dds.monedero.exceptions.MaximaCantidadDepositosException;
 import dds.monedero.exceptions.MaximoExtraccionDiarioException;
@@ -65,13 +67,14 @@ public class Cuenta {
   }
   
   public double getMontoExtraidoA(LocalDate fecha) {
-    return getMovimientos().stream()
-    		//si se hace esta comparacion en el filter, entonces el metodo fueExtraido(fecha) estaria al pedo
-    		//¿por qué no usar dicho metodo?
-    		//Toda esta comparacion del filter la podriamos meter en un metodo
-        .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
+    return getExtraccionesDeFecha(fecha)
         .mapToDouble(Movimiento::getMonto)
         .sum();
+  }
+  
+  public Stream<Movimiento> getExtraccionesDeFecha(LocalDate fecha){
+	  return getMovimientos().stream()
+		.filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha));
   }
 
   public List<Movimiento> getMovimientos() {
