@@ -49,8 +49,7 @@ public class Movimiento {
   }
   
   //Falta polimorfismo
-  //Se podrian declarar una clase abstracta TipoMovimiento y que hereden las clases Deposito y Extracción
-  //así se reemplaza este if por un "this.tipo.calcularNuevoSaldo()"
+  //Se podria declarar Monedero como clase abstracta y que hereden las clases Deposito y Extracción
   public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
       return cuenta.getSaldo() + getMonto();
